@@ -1,5 +1,74 @@
 #include "scene.hpp"
 
+using namespace cgp;
+
+
+
+
+void scene_structure::initialize()
+{
+	camera_control.initialize(inputs, window); // Give access to the inputs and window global state to the camera controler
+	camera_control.set_rotation_axis_y();
+	camera_control.look_at({ 3.0f, 2.0f, 2.0f }, {0,0,0}, {0,0,1});
+	global_frame.initialize_data_on_gpu(mesh_primitive_frame());
+
+	// Initialize the moving sphere that can be controlled with the GUI
+	mesh sphere_mesh = mesh_primitive_sphere(0.5f, {0,0,0}, 40, 40);
+	sphere.initialize_data_on_gpu(sphere_mesh);
+}
+
+void update_scene(scene_structure& scene)
+{
+	// Update the position of the sphere
+	scene.sphere.model.translation = { scene.gui.sphere_x_coord, scene.gui.sphere_y_coord, scene.gui.sphere_z_coord };
+	// Update the radius of the sphere
+	scene.sphere.model.scaling = scene.gui.sphere_radius;
+}
+void scene_structure::display_frame()
+{
+	// Set the light to the current position of the camera
+	environment.light = camera_control.camera_model.position();
+	
+	
+	if (gui.display_frame)
+		draw(global_frame, environment);
+	draw(sphere, environment);
+	update_scene(*this);
+
+
+}
+
+void scene_structure::display_gui()
+{
+	ImGui::Checkbox("Frame", &gui.display_frame);
+	ImGui::Checkbox("Wireframe", &gui.display_wireframe);
+	ImGui::SliderFloat("Sphere x coord", &gui.sphere_x_coord, -5.0f, 5.0f);
+	ImGui::SliderFloat("Sphere y coord", &gui.sphere_y_coord, -5.0f, 5.0f);
+	ImGui::SliderFloat("Sphere z coord", &gui.sphere_z_coord, -5.0f, 5.0f);
+	ImGui::SliderFloat("Sphere radius", &gui.sphere_radius, 0.1f, 1.0f);
+
+}
+
+void scene_structure::mouse_move_event()
+{
+	if (!inputs.keyboard.shift)
+		camera_control.action_mouse_move(environment.camera_view);
+}
+void scene_structure::mouse_click_event()
+{
+	camera_control.action_mouse_click(environment.camera_view);
+}
+void scene_structure::keyboard_event()
+{
+	camera_control.action_keyboard(environment.camera_view);
+}
+void scene_structure::idle_frame()
+{
+	camera_control.idle_frame(environment.camera_view);
+}
+/*
+#include "scene.hpp"
+
 #include "loader/skinning_loader.hpp"
 
 using namespace cgp;
@@ -208,7 +277,7 @@ void scene_structure::display_gui()
 	
 	if (update)
 		update_new_content(new_shape, texture_id);
-		*/
+		
 }
 
 void scene_structure::mouse_move_event()
@@ -228,4 +297,5 @@ void scene_structure::idle_frame()
 {
 	camera_control.idle_frame(environment.camera_view);
 }
+*/
 
