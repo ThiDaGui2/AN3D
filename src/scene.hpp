@@ -1,62 +1,4 @@
 #pragma once
-
-#include "cgp/cgp.hpp"
-#include "environment.hpp"
-
-
-using cgp::mesh_drawable;
-
-
-struct gui_parameters {
-	bool display_frame = true;
-	bool display_wireframe = false;
-	float sphere_x_coord = 0.0f;
-	float sphere_y_coord = 0.0f;
-	float sphere_z_coord = 0.0f;
-	float sphere_radius = 0.5f;
-};
-
-// The structure of the custom scene
-struct scene_structure : cgp::scene_inputs_generic {
-	
-	// ****************************** //
-	// Elements and shapes of the scene
-	// ****************************** //
-	camera_controller_orbit_euler camera_control;
-	camera_projection_perspective camera_projection;
-	window_structure window;
-
-	mesh_drawable global_frame;          // The standard global frame
-	environment_structure environment;   // Standard environment controler
-	input_devices inputs;                // Storage for inputs status (mouse, keyboard, window dimension)
-	gui_parameters gui;                  // Standard GUI element storage
-	
-	// ****************************** //
-	// Elements and shapes of the scene
-	// ****************************** //
-
-	cgp::mesh_drawable sphere;
-
-
-
-	// ****************************** //
-	// Functions
-	// ****************************** //
-
-	void initialize();    // Standard initialization to be called before the animation loop
-	void display_frame(); // The frame display to be called within the animation loop
-	void display_gui();   // The display of the GUI, also called within the animation loop
-
-
-	void mouse_move_event();
-	void mouse_click_event();
-	void keyboard_event();
-	void idle_frame();
-
-};
-
-/*
-
 #include "cgp/cgp.hpp"
 #include "environment.hpp"
 
@@ -83,6 +25,13 @@ struct gui_parameters {
 	bool skeleton_rest_pose_bone = false;
 	bool skeleton_rest_pose_frame = false;
 	bool skeleton_rest_pose_sphere = false;
+
+	//sphere
+	float sphere_x_coord = 0.0f;
+	float sphere_y_coord = 0.0f;
+	float sphere_z_coord = 0.0f;
+	float sphere_radius = 0.5f;
+
 };
 
 struct visual_shapes_parameters
@@ -131,6 +80,8 @@ struct scene_structure : cgp::scene_inputs_generic {
 	cgp::rig_structure rig;
 	skinning_current_data skinning_data;
 
+	cgp::mesh_drawable sphere;
+
 
 	// ****************************** //
 	// Functions
@@ -149,7 +100,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 	void idle_frame();
 
 };
-*/
+
 
 
 
