@@ -5,6 +5,8 @@
 #include "skeleton/skeleton.hpp"
 #include "skeleton/skeleton_drawable.hpp"
 #include "skinning/skinning.hpp"
+#include "IK_skeleton/IK_skeleton.hpp"
+#include "IK_skeleton/IK_skeleton_drawable.hpp"
 
 using cgp::mesh_drawable;
 
@@ -40,6 +42,7 @@ struct visual_shapes_parameters
 	cgp::mesh_drawable surface_rest_pose;
 	cgp::skeleton_drawable skeleton_current;
 	cgp::skeleton_drawable skeleton_rest_pose;
+	cgp::IK_skeleton_drawable ik_skeleton;
 };
 
 struct skinning_current_data
@@ -79,6 +82,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 	cgp::skeleton_animation_structure skeleton_data;
 	cgp::rig_structure rig;
 	skinning_current_data skinning_data;
+	cgp::IK_skeleton ik_skeleton;
 
 	cgp::mesh_drawable sphere;
 
