@@ -12,20 +12,20 @@ struct IK_skeleton
     cgp::numarray<cgp::vec3> join_positions;
     cgp::numarray<int> join_parent;
     float epsilon;
+    size_t max_iter;
 
 private:
     bool is_reachable(cgp::vec3 target);
 
 public:
     IK_skeleton() = default;
-    IK_skeleton(cgp::skeleton_animation_structure &skeleton, float epsilon);
+    IK_skeleton(cgp::skeleton_animation_structure &skeleton_, float epsilon_, size_t max_iter_);
 
 public:
-    void init(cgp::skeleton_animation_structure &skeleton, float epsilon);
     void calculate_IK_joins(cgp::vec3 target_position);
 
 public:
-    void update_skeleton(float animation_time);
+    void update_skeleton(float animation_time, skeleton_animation_structure &skeleton);
     // skeleton.animation_time = {0, animation_time}
     // skeleton.animation_geometry_local = {current_pose, IK_pose)
 };

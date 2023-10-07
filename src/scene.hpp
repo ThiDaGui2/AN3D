@@ -32,7 +32,7 @@ struct gui_parameters {
 	float sphere_x_coord = 0.0f;
 	float sphere_y_coord = 0.0f;
 	float sphere_z_coord = 0.0f;
-	float sphere_radius = 0.5f;
+	float sphere_radius = 0.1f;
 
 };
 

@@ -20,10 +20,13 @@ void scene_structure::initialize()
 
 	mesh shape;
 	load_cylinder(skeleton_data, rig, shape);
-	load_animation_bend_zx(skeleton_data.animation_geometry_local,
-		skeleton_data.animation_time,
-		skeleton_data.parent_index);
-	ik_skeleton = IK_skeleton(skeleton_data, 0.01f);
+    // load_animation_bend_zx(skeleton_data.animation_geometry_local,
+    // 	skeleton_data.animation_time,
+    // 	skeleton_data.parent_index);
+    skeleton_data.animation_geometry_local.push_back(skeleton_data.rest_pose_local);
+    skeleton_data.animation_geometry_local.push_back(skeleton_data.rest_pose_local);
+    skeleton_data.animation_time = {0, 1};
+    ik_skeleton = IK_skeleton(skeleton_data, 0.01f, 10);
 
 	update_new_content(shape, mesh_drawable::default_texture);
 }
@@ -112,10 +115,10 @@ void scene_structure::update_new_content(mesh const& shape, opengl_texture_image
 
 	visual_data.ik_skeleton.clear();
 	visual_data.ik_skeleton = IK_skeleton_drawable(ik_skeleton.join_positions, ik_skeleton.join_parent);
-	
-	timer.t_min = skeleton_data.animation_time[0];
-	timer.t_max = skeleton_data.animation_time[skeleton_data.animation_time.size() - 1];
-	timer.t = skeleton_data.animation_time[0];
+
+    timer.t_min = skeleton_data.animation_time[0];
+    timer.t_max = skeleton_data.animation_time[skeleton_data.animation_time.size() - 1];
+    timer.t = skeleton_data.animation_time[0];
 }
 
 void scene_structure::display_gui()
@@ -162,6 +165,7 @@ void scene_structure::display_gui()
 	{
 		ik_skeleton.calculate_IK_joins({ gui.sphere_x_coord, gui.sphere_y_coord, gui.sphere_z_coord });
 		visual_data.ik_skeleton.update(ik_skeleton.join_positions, ik_skeleton.join_parent);
+        ik_skeleton.update_skeleton(1.0f, skeleton_data);
 	}
 
 	visual_data.skeleton_current.display_segments = gui.skeleton_current_bone;
