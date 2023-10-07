@@ -23,6 +23,7 @@ void scene_structure::initialize()
     // load_animation_bend_zx(skeleton_data.animation_geometry_local,
     // 	skeleton_data.animation_time,
     // 	skeleton_data.parent_index);
+
     skeleton_data.animation_geometry_local.push_back(skeleton_data.rest_pose_local);
     skeleton_data.animation_geometry_local.push_back(skeleton_data.rest_pose_local);
     skeleton_data.animation_time = {0, 1};
@@ -161,12 +162,19 @@ void scene_structure::display_gui()
 	ImGui::SliderFloat("Moving Sphere radius", &gui.sphere_radius, 0.1f, 1.0f);
 
 	ImGui::Spacing(); ImGui::Spacing();
+	ImGui::NewLine();
 	if(ImGui::Button("IK"))
 	{
 		ik_skeleton.calculate_IK_joins({ gui.sphere_x_coord, gui.sphere_y_coord, gui.sphere_z_coord });
 		visual_data.ik_skeleton.update(ik_skeleton.join_positions, ik_skeleton.join_parent);
         ik_skeleton.update_skeleton(1.0f, skeleton_data);
 	}
+	ImGui::Spacing(); ImGui::Spacing();
+	ImGui::Text("IK Skeleton: "); ImGui::SameLine();
+	ImGui::Checkbox("Bones##IK", &gui.ik_skeleton_bone); ImGui::SameLine();
+	ImGui::Checkbox("Frame##IK", &gui.ik_skeleton_frame); ImGui::SameLine();
+	ImGui::Checkbox("Sphere##IK", &gui.ik_skeleton_sphere);
+
 
 	visual_data.skeleton_current.display_segments = gui.skeleton_current_bone;
 	visual_data.skeleton_current.display_joint_frame = gui.skeleton_current_frame;
@@ -176,6 +184,10 @@ void scene_structure::display_gui()
 	visual_data.skeleton_rest_pose.display_joint_sphere = gui.skeleton_rest_pose_sphere;
 	sphere.model.translation = { gui.sphere_x_coord, gui.sphere_y_coord, gui.sphere_z_coord };
 	sphere.model.scaling = gui.sphere_radius;
+
+	visual_data.ik_skeleton.display_segments = gui.ik_skeleton_bone;
+	visual_data.ik_skeleton.display_joint_frame = gui.ik_skeleton_frame;
+	visual_data.ik_skeleton.display_joint_sphere = gui.ik_skeleton_sphere;
 
 
 	/*

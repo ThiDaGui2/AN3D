@@ -61,13 +61,15 @@ void load_animation_twist_x(numarray<numarray<affine_rt>>& animation_skeleton, n
 void load_cylinder(skeleton_animation_structure& skeleton_data, rig_structure& rig, mesh& shape)
 {
 	// Skeleton
-	skeleton_data.parent_index = {-1, 0, 1};
+	skeleton_data.parent_index = {-1, 0, 1, 2};
 	
 	rotation_transform r0 = rotation_transform();
-	skeleton_data.rest_pose_local.resize(3);
+	skeleton_data.rest_pose_local.resize(4);
 	skeleton_data.rest_pose_local[0] = affine_rt( r0, vec3{0.0f,0,0} );
 	skeleton_data.rest_pose_local[1] = affine_rt( r0, vec3{0.5f,0,0} );
 	skeleton_data.rest_pose_local[2] = affine_rt( r0, vec3{0.5f,0,0} );
+	skeleton_data.rest_pose_local[3] = affine_rt( r0, vec3{0.5f,0,0} );
+
 
 	// mesh
 	size_t const N = 50;

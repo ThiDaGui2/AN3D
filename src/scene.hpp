@@ -28,6 +28,11 @@ struct gui_parameters {
 	bool skeleton_rest_pose_frame = false;
 	bool skeleton_rest_pose_sphere = false;
 
+	bool ik_skeleton_bone = false;
+	bool ik_skeleton_frame = false;
+	bool ik_skeleton_sphere = false;
+	
+
 	//sphere
 	float sphere_x_coord = 0.0f;
 	float sphere_y_coord = 0.0f;
