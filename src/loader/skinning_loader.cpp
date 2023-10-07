@@ -70,7 +70,6 @@ void load_cylinder(skeleton_animation_structure& skeleton_data, rig_structure& r
 	skeleton_data.rest_pose_local[2] = affine_rt( r0, vec3{0.5f,0,0} );
 	skeleton_data.rest_pose_local[3] = affine_rt( r0, vec3{0.5f,0,0} );
 
-
 	// mesh
 	size_t const N = 50;
 	shape = mesh_primitive_cylinder(0.1f, {0,0,0}, {1,0,0}, N,N);

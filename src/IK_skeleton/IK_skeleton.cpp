@@ -111,7 +111,7 @@ namespace cgp
             local_geometry[k].translation = skeleton.rest_pose_local[k].translation;
             if (k == 1)
                 global_geometry[0] = local_geometry[0];
-            global_geometry[k] = global_geometry[k - 1] * local_geometry[k];
+            global_geometry = skeleton_local_to_global(local_geometry, join_parent);
         }
         numarray<affine_rt> first_frame = skeleton.animation_geometry_local[1];
         skeleton.animation_geometry_local.clear();
