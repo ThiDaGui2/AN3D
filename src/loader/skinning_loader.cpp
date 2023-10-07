@@ -72,7 +72,7 @@ void load_cylinder(skeleton_animation_structure& skeleton_data, rig_structure& r
 
 	// mesh
 	size_t const N = 50;
-	shape = mesh_primitive_cylinder(0.1f, {0,0,0}, {1,0,0}, N,N);
+	shape = mesh_primitive_cylinder(0.1f, {0,0,0}, {1.5,0,0}, N,N);
 	
 	rig.joint.clear();
 	rig.weight.clear();
@@ -83,19 +83,28 @@ void load_cylinder(skeleton_animation_structure& skeleton_data, rig_structure& r
 		{
 			const float u = ku/float(N-1.0f);
 			float const alpha = 3.0f; // power for skinning weights evolution
-			float w0, w1;
+			float w0, w1, w2;
 
-			if (u < 0.5f) {
-				w1 = 0.5f*std::pow(u/0.5f, alpha);
-				w0 = 1-w1;
-			}
-			else {
-				w0 = 0.5f*std::pow(1-(u-0.5f)/0.5f, alpha);
-				w1 = 1-w0;
-			}
+            if (u < 0.33f) {
+                w0 = 1;
+                w1 = 0;
+                w2 = 0;
+            }
+            else {
+                if (u < 0.67f) {
+                    w0 = 0;
+                    w1 = 1;
+                    w2 = 0;
+                } else {
+                    w0 = 0;
+                    w1 = 0;
+                    w2 = 1;
+                }
+            }
+
 			
-			rig.joint.push_back(numarray<int>{0, 1});
-			rig.weight.push_back(numarray<float>{w0, w1});
+			rig.joint.push_back(numarray<int>{0, 1, 2});
+			rig.weight.push_back(numarray<float>{w0, w1, w2});
 		}
 	}
 }
