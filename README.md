@@ -24,6 +24,10 @@ nous avons ensuite implémenté la fonction
 ```c++
 void IK_skeleton::update_skeleton(float animation_time, skeleton_animation_structure &skeleton)
 ```
-qui permet de mettre a jour la position des joints du squelette dans la géométrie globale et locale du squelette aprés avoir calculé la position des joints via l'algorithme FABRIK. Cette fonction permet également calculer les matrice de transformation des joints du squelette.
+qui permet de mettre a jour la position des joints du squelette dans la locale du squelette aprés avoir calculé la position des joints via l'algorithme FABRIK. Cette fonction permet également calculer les matrice de transformation des joints du squelette.
+
+nous avons ensuite implémenté la classe IK_skeleton_drawable qui fonctionne de la même manière que la classe skeleton_drawable mais qui utilise un IK_skeleton a la place d'un skeleton.
+
+nous avons également changé le timer pour un timer_basic car nous avions besoin d'un timer qui ne bouclait pas une fois l'animation terminé et le timer_interval ne nous permettait pas de faire cela.
 
 
