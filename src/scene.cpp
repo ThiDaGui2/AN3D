@@ -153,6 +153,7 @@ void scene_structure::display_gui()
 
 	ImGui::Spacing(); ImGui::Spacing();
 	ImGui::Spacing(); ImGui::Spacing();
+	ImGui::Text("Moving Sphere: ");
 	ImGui::SliderFloat("Moving Sphere x coord", &gui.sphere_x_coord, -5.0f, 5.0f);
 	ImGui::SliderFloat("Moving Sphere y coord", &gui.sphere_y_coord, -5.0f, 5.0f);
 	ImGui::SliderFloat("Moving Sphere z coord", &gui.sphere_z_coord, -5.0f, 5.0f);
@@ -160,14 +161,13 @@ void scene_structure::display_gui()
 
 	ImGui::Spacing(); ImGui::Spacing();
 	ImGui::NewLine();
-	if(ImGui::Button("IK"))
+	if(ImGui::Button("Calculate IK"))
 	{
 		ik_skeleton.calculate_IK_joins({ gui.sphere_x_coord, gui.sphere_y_coord, gui.sphere_z_coord });
 		visual_data.ik_skeleton.update(ik_skeleton.join_positions, ik_skeleton.join_parent);
         ik_skeleton.update_skeleton(1.0f, skeleton_data);
         skeleton_data.time_start = timer.t;
 	}
-	ImGui::Spacing(); ImGui::Spacing();
 	ImGui::Text("IK Skeleton: "); ImGui::SameLine();
 	ImGui::Checkbox("Bones##IK", &gui.ik_skeleton_bone); ImGui::SameLine();
 	ImGui::Checkbox("Frame##IK", &gui.ik_skeleton_frame); ImGui::SameLine();

@@ -10,7 +10,9 @@ Pour compiler le projet il faut utiliser la commande suivante depuis la racine d
 ```bash
 mkdir build && cd build && cmake .. && make -j8
 ```
+## Utilisation
 
+une fois l'executable lancé, bouger la sphére avec la GUI, puis appuyer sur le bouton "calculate IK" pour calculer la position des joints du squelette et voir le résultat.
 ## Travail réalisé
 
 Nous avons utilisé comme base le code du TP05 car il contenait déja le code
