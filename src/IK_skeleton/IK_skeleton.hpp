@@ -8,9 +8,9 @@ namespace cgp
 {
 struct IK_skeleton
 {
-    cgp::numarray<float> join_length;
-    cgp::numarray<cgp::vec3> join_positions;
-    cgp::numarray<int> join_parent;
+    cgp::numarray<float> joint_lengths;
+    cgp::numarray<cgp::vec3> joint_positions;
+    cgp::numarray<int> joint_parents;
     float epsilon;
     size_t max_iter;
 
@@ -22,7 +22,7 @@ public:
     IK_skeleton(cgp::skeleton_animation_structure &skeleton_, float epsilon_, size_t max_iter_);
 
 public:
-    void calculate_IK_joins(cgp::vec3 target_position);
+    void calculate_IK_joints(cgp::vec3 target_position);
 
 public:
     void update_skeleton(float animation_time, skeleton_animation_structure &skeleton);

@@ -5,36 +5,36 @@ namespace cgp
     {
         epsilon = epsilon_;
         max_iter = max_iter_;
-        join_parent = skeleton_.parent_index;
-        join_length = cgp::numarray<float>(skeleton_.number_joint() - 1);
+        joint_parents = skeleton_.parent_index;
+        joint_lengths = cgp::numarray<float>(skeleton_.number_joint() - 1);
         for (int i = 0; i < skeleton_.number_joint() - 1; i++)
         {
-            join_length[i] = cgp::norm(skeleton_.rest_pose_local[i + 1].translation);
+            joint_lengths[i] = cgp::norm(skeleton_.rest_pose_local[i + 1].translation);
         }
 
         numarray<affine_rt> rest_pose_global = skeleton_.rest_pose_global();
-        join_positions = cgp::numarray<vec3>(skeleton_.number_joint());
+        joint_positions = cgp::numarray<vec3>(skeleton_.number_joint());
         for (int i = 0; i < skeleton_.number_joint(); i++)
         {
-            join_positions[i] = rest_pose_global[i].translation;
+            joint_positions[i] = rest_pose_global[i].translation;
         }
-        assert_cgp(join_positions.size() >= 2, "IK skeleton need at least 2 joints and " + str(join_positions.size()) + "were given")
+        assert_cgp(joint_positions.size() >= 2, "IK skeleton need at least 2 joints and " + str(joint_positions.size()) + "were given")
 
     }
     
     bool IK_skeleton::is_reachable(vec3 target)
     {
-        float dist = cgp::norm(target - join_positions[0]);
+        float dist = cgp::norm(target - joint_positions[0]);
         float total_length = 0;
-        for (int i = 0; i < join_length.size(); i++)
+        for (int i = 0; i < joint_lengths.size(); i++)
         {
-            total_length += join_length[i];
+            total_length += joint_lengths[i];
         }
         return dist <= total_length;
     }
 
     // FABRIK algorithm
-    void IK_skeleton::calculate_IK_joins(cgp::vec3 target_position)
+    void IK_skeleton::calculate_IK_joints(cgp::vec3 target_position)
     {
         // 1. Forward reaching
         // 2. Backward reaching
@@ -42,11 +42,11 @@ namespace cgp
 
         if (!is_reachable(target_position))
         {
-            for (int i = 0; i < join_positions.size() -1; i++)
+            for (int i = 0; i < joint_positions.size() - 1; i++)
             {
-                float r = norm(target_position - join_positions[i]);
-                float lambda = join_length[i] / r;
-                join_positions[i + 1] = (1 - lambda) * join_positions[i] + lambda * target_position;
+                float r = norm(target_position - joint_positions[i]);
+                float lambda = joint_lengths[i] / r;
+                joint_positions[i + 1] = (1 - lambda) * joint_positions[i] + lambda * target_position;
             }
         }
 
@@ -56,47 +56,47 @@ namespace cgp
             //  case
 
             bool all_aligned = true;
-            for (int iter = 2; iter < join_positions.size() && all_aligned; iter++)
+            for (int iter = 2; iter < joint_positions.size() && all_aligned; iter++)
             {
-                vec3 ab = join_positions[iter] - join_positions[0];
-                vec3 ac = join_positions[1] - join_positions[0];
+                vec3 ab = joint_positions[iter] - joint_positions[0];
+                vec3 ac = joint_positions[1] - joint_positions[0];
                 all_aligned = (is_equal(norm(cross(ab, ac)), 0));
             }
             if (all_aligned)
             {
-                vec3 ab = target_position - join_positions[0];
-                vec3 ac = join_positions[1] - join_positions[0];
+                vec3 ab = target_position - joint_positions[0];
+                vec3 ac = joint_positions[1] - joint_positions[0];
                 all_aligned = (is_equal(norm(cross(ab, ac)), 0));
-                if (all_aligned && join_positions.size() > 2)
+                if (all_aligned && joint_positions.size() > 2)
                 {
-                    vec3 offset = orthogonal_vector(join_positions[1] - join_positions[0]);
+                    vec3 offset = orthogonal_vector(joint_positions[1] - joint_positions[0]);
                     offset = 0.01f * offset;
-                    join_positions[join_positions.size() - 2] += offset;
+                    joint_positions[joint_positions.size() - 2] += offset;
                 }
             }
 
             size_t nb_iter = 0;
-            vec3 b = join_positions[0];
-            float dif = norm(target_position - join_positions[join_positions.size() - 1]);
+            vec3 b = joint_positions[0];
+            float dif = norm(target_position - joint_positions[joint_positions.size() - 1]);
             while (dif > epsilon && nb_iter < max_iter)
             {
-                join_positions[join_positions.size() - 1] = target_position;
-                for (int i = join_positions.size() - 2; i >= 0; i--)
+                joint_positions[joint_positions.size() - 1] = target_position;
+                for (int i = joint_positions.size() - 2; i >= 0; i--)
                 {
-                    float r = norm(join_positions[i + 1] - join_positions[i]);
-                    float lambda = join_length[i] / r;
-                    join_positions[i] = (1 - lambda) * join_positions[i + 1] + lambda * join_positions[i];
+                    float r = norm(joint_positions[i + 1] - joint_positions[i]);
+                    float lambda = joint_lengths[i] / r;
+                    joint_positions[i] = (1 - lambda) * joint_positions[i + 1] + lambda * joint_positions[i];
                 }
 
-                join_positions[0] = b;
-                for (int i = 0; i < join_positions.size() - 1; i++)
+                joint_positions[0] = b;
+                for (int i = 0; i < joint_positions.size() - 1; i++)
                 {
-                    float r = norm(join_positions[i + 1] - join_positions[i]);
-                    float lambda = join_length[i] / r;
-                    join_positions[i + 1] = (1 - lambda) * join_positions[i] + lambda * join_positions[i + 1];
+                    float r = norm(joint_positions[i + 1] - joint_positions[i]);
+                    float lambda = joint_lengths[i] / r;
+                    joint_positions[i + 1] = (1 - lambda) * joint_positions[i] + lambda * joint_positions[i + 1];
                 }
 
-                dif = norm(target_position - join_positions[join_positions.size() - 1]);
+                dif = norm(target_position - joint_positions[joint_positions.size() - 1]);
                 nb_iter++;
             }
         }
@@ -104,7 +104,7 @@ namespace cgp
 
     void IK_skeleton::update_skeleton(float animation_time, skeleton_animation_structure &skeleton)
     {
-        int nb_joints = join_positions.size();
+        int nb_joints = joint_positions.size();
 
         // update local geometry
         numarray<affine_rt> local_geometry(skeleton.rest_pose_local);
@@ -114,13 +114,13 @@ namespace cgp
         for (int k = 1; k < nb_joints; k++)
         {
             affine_rt inverse_transformation = inverse(global_geometry[k - 1]);
-            vec3 ik_local_position = inverse_transformation * join_positions[k];
+            vec3 ik_local_position = inverse_transformation * joint_positions[k];
             ik_local_position = normalize(ik_local_position);
             vec3 rest_local_position = normalize(skeleton.rest_pose_local[k].translation);
             rotation_transform rotation =
                     rotation_transform::from_vector_transform(rest_local_position, ik_local_position);
             local_geometry[k - 1].rotation = local_geometry[k - 1].rotation * rotation;
-            global_geometry = skeleton_local_to_global(local_geometry, join_parent);
+            global_geometry = skeleton_local_to_global(local_geometry, joint_parents);
         }
         numarray<affine_rt> first_frame = skeleton.animation_geometry_local[skeleton.animation_geometry_local.size() - 1];
         skeleton.animation_geometry_local.clear();

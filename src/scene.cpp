@@ -114,7 +114,7 @@ void scene_structure::update_new_content(mesh const& shape, opengl_texture_image
 	visual_data.skeleton_rest_pose = skeleton_drawable(skinning_data.skeleton_rest_pose, skeleton_data.parent_index);
 
 	visual_data.ik_skeleton.clear();
-	visual_data.ik_skeleton = IK_skeleton_drawable(ik_skeleton.join_positions, ik_skeleton.join_parent);
+	visual_data.ik_skeleton = IK_skeleton_drawable(ik_skeleton.joint_positions, ik_skeleton.joint_parents);
 
     timer.start();
 }
@@ -163,8 +163,8 @@ void scene_structure::display_gui()
 	ImGui::NewLine();
 	if(ImGui::Button("Calculate IK"))
 	{
-		ik_skeleton.calculate_IK_joins({ gui.sphere_x_coord, gui.sphere_y_coord, gui.sphere_z_coord });
-		visual_data.ik_skeleton.update(ik_skeleton.join_positions, ik_skeleton.join_parent);
+        ik_skeleton.calculate_IK_joints({gui.sphere_x_coord, gui.sphere_y_coord, gui.sphere_z_coord});
+        visual_data.ik_skeleton.update(ik_skeleton.joint_positions, ik_skeleton.joint_parents);
         ik_skeleton.update_skeleton(1.0f, skeleton_data);
         skeleton_data.time_start = timer.t;
 	}
