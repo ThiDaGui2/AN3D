@@ -7,7 +7,7 @@ namespace cgp
 		assert_cgp(times.size()>=2, "time intervals should have more than 2 values");
 
 		size_t const N = times.size();
-		if (t < times[0] || t >= times[N - 1])
+		if (t < times[0] || t > times[N - 1])
 		{
 			index_0 = -1;
 			alpha = 0.0f;
@@ -32,8 +32,18 @@ namespace cgp
 
 	numarray<affine_rt> skeleton_animation_structure::evaluate_local(float t) const
 	{
-		int kt=0;
+        if (animation_time.size() == 1)
+            return animation_geometry_local[0];
+
+        int kt=0;
 		float alpha;
+        t = t - time_start;
+
+        if (t < animation_time[0])
+            t = animation_time[0];
+        if (t > animation_time[1])
+            t = animation_time[1];
+
 		bool const find_time = find_interval(kt, alpha, animation_time, t);
 		assert_cgp(find_time, "Could not find correct time interval for time t="+str(t)+", while allowed time interval is ["+str(animation_time[0])+","+str(animation_time[animation_time.size()-1])+"]");
 

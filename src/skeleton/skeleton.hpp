@@ -11,6 +11,7 @@ namespace cgp
 		numarray<int> parent_index;          // Connectivity of the skeleton. Stores at index i, the index of the parent joint
 		numarray<affine_rt> rest_pose_local; // Rest pose storage of the rigid transforms (rotation and translation) of the joints in local coordinates
 
+        float time_start;
 		numarray<float> animation_time;      // Sequence of time corresponding to the animation
 		numarray<numarray<affine_rt> > animation_geometry_local; // Storage of all rigid transforms of the joints for every frame in local coordinates (for all time, for all joints)
 

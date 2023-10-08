@@ -82,7 +82,7 @@ struct scene_structure : cgp::scene_inputs_generic {
 	// Elements and shapes of the scene
 	// ****************************** //
 
-	cgp::timer_interval timer;
+	cgp::timer_basic timer;
 	visual_shapes_parameters visual_data;
 	cgp::skeleton_animation_structure skeleton_data;
 	cgp::rig_structure rig;
