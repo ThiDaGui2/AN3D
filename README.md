@@ -4,7 +4,14 @@ Damien.Didier
 
 Jules.Cassegrain
 
-## Introduction
+## Compilation
+
+Pour compiler le projet il faut utiliser la commande suivante depuis la racine du projet:
+```bash
+mkdir build && cd build && cmake .. && make -j8
+```
+
+## Travail réalisé
 
 Nous avons utilisé comme base le code du TP05 car il contenait déja le code
 pour le skinning et le skeleton.
@@ -30,4 +37,7 @@ nous avons ensuite implémenté la classe IK_skeleton_drawable qui fonctionne de
 
 nous avons également changé le timer pour un timer_basic car nous avions besoin d'un timer qui ne bouclait pas une fois l'animation terminé et le timer_interval ne nous permettait pas de faire cela.
 
+## Améliorations possibles
 
+- verifier si les joints et la targets ne sont pas alignés car cela peut poser des problémes pour converger vers la target (division par zéros) et dans le cas echéant ajouter un offset un des joints pour éviter ce probléme.
+- ajouter un systéme de contraintes pour les joints (par exemple un joint ne peut pas tourner a plus de 90° par rapport a son parent)
